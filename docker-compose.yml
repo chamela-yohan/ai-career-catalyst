@@ -23,5 +23,6 @@ services:
       - DB_USER=root
       - DB_PASSWORD=1234
       - DB_HOST=db
+      - GEMINI_API_KEY=AIzaSyBbl7K_zmYRtbou3ioHmbpPoO2AWd_Rf7g
     depends_on:
       - db

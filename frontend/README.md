@@ -1,73 +1,82 @@
-# React + TypeScript + Vite
+# AI Career Catalyst 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**AI Career Catalyst** is a modern, full-stack web application designed to help job seekers prepare for technical interviews. By leveraging the power of **Google Gemini AI**, the platform generates role-specific interview questions and professional model answers to streamline the career preparation process.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## React Compiler
+* **AI Interview Question Generator:** Dynamically generates top 5 interview questions based on the user's job role and experience level.
+* **Model Answer Retrieval:** Provides concise, industry-standard answers for each generated question using AI.
+* **Modern UI/UX:** Clean, dark-themed responsive interface built with React and Vite.
+* **Dockerized Environment:** Fully containerized setup for easy development and deployment.
+* **Scalable Backend:** Robust API built with Django and Django Rest Framework (DRF).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | React.js (Vite), Axios, CSS3 |
+| **Backend** | Django, Django Rest Framework (DRF) |
+| **Database** | MySQL |
+| **AI Engine** | Google Gemini 2.5 Flash API |
+| **DevOps** | Docker, Docker Compose |
+| **Version Control** | Git & GitHub |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🚀 Getting Started
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Follow these steps to get the project up and running on your local machine using Docker.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Prerequisites
+* [Docker](https://www.docker.com/) installed on your machine.
+* Google Gemini API Key (Get it from [Google AI Studio](https://aistudio.google.com/)).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Installation
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/chamela-yohan/ai-career-catalyst.git](https://github.com/chamela-yohan/ai-career-catalyst.git)
+    cd ai-career-catalyst
+    ```
+
+2.  **Environment Setup:**
+    Open `docker-compose.yml` and replace `YOUR_GEMINI_API_KEY` with your actual API key.
+
+3.  **Build and Run with Docker:**
+    ```bash
+    docker-compose up --build
+    ```
+
+4.  **Run Migrations:**
+    Open a new terminal and run:
+    ```bash
+    docker-compose run web python manage.py migrate
+    ```
+
+5.  **Access the App:**
+    * Frontend: `http://localhost:5173`
+    * Backend API: `http://localhost:8000/api/`
+
+---
+
+## 📈 Roadmap
+
+- [x] Initial Project Setup (Docker, Django, React)
+- [x] Basic AI Integration (Gemini API)
+- [x] Interview Question Generator Feature
+- [ ] User Authentication (Firebase/JWT) - **In Progress**
+- [ ] MySQL Database Integration for Saving History
+- [ ] Resume Analysis & Feedback
+- [ ] Mock Interview Voice Support
+
+---
+
+## 👤 Author
+
+**Chamela Yohan**
+* GitHub: [@chamela-yohan](https://github.com/chamela-yohan)
+* LinkedIn: https://www.linkedin.com/in/chamela-aththanayaka-a28865228/

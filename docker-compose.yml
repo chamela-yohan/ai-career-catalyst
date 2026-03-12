@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: ai_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: ai_career_db
+      MYSQL_ROOT_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+
+  web:
+    build: ./backend
+    container_name: django_backend
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_NAME=ai_career_db
+      - DB_USER=root
+      - DB_PASSWORD=1234
+      - DB_HOST=db
+    depends_on:
+      - db

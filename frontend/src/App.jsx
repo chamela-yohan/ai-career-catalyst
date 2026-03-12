@@ -1,57 +1,54 @@
 import { useState } from 'react';
-import { askAI } from './api';
+import { generateQuestions, getModelAnswer } from './api';
 import './App.css';
 
 function App() {
-  const [prompt, setPrompt] = useState('');
-  const [response, setResponse] = useState('');
+  const [role, setRole] = useState('');
+  const [questions, setQuestions] = useState([]);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!prompt.trim()) return;
-
+  const handleGenerate = async () => {
     setLoading(true);
-    setResponse("");
-
-    try {
-      const data = await askAI(prompt);
-      setResponse(data.ai_response);
-    } catch (err) {
-      setResponse("❌ වැරදීමක් සිදු විය. කරුණාකර නැවත උත්සාහ කරන්න.");
-    }
-
+    const data = await generateQuestions(role, 'Intermediate');
+    setQuestions(data);
     setLoading(false);
   };
 
+  const handleShowAnswer = async (question) => {
+    setSelectedAnswer("AI පිළිතුර සූදානම් කරමින් පවතී...");
+    const answer = await getModelAnswer(question);
+    setSelectedAnswer(answer);
+  };
+
   return (
-    <div className="app-container">
+    <div className="App">
+      <h1>AI Interview Coach 🤖</h1>
+      <input 
+        value={role} 
+        onChange={(e) => setRole(e.target.value)} 
+        placeholder="Job Role එක ඇතුළත් කරන්න (e.g. React Developer)"
+      />
+      <button onClick={handleGenerate} disabled={loading}>
+        {loading ? "Generate වෙමින්..." : "ප්‍රශ්න ලබා ගන්න"}
+      </button>
 
-      <div className="card">
-        <h1>AI Career Catalyst 🚀</h1>
-        <p className="subtitle">ඔයාගේ career ප්‍රශ්න මගෙන් අහන්න</p>
-
-        <form onSubmit={handleSubmit}>
-          <textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="ඔයාගේ ප්‍රශ්නය මෙතන Type කරන්න..."
-            rows="4"
-          />
-
-          <button type="submit" disabled={loading}>
-            {loading ? "🤖 AI එක හිතන ගමන්..." : "AI එකෙන් අහන්න"}
-          </button>
-        </form>
-
-        {response && (
-          <div className="response-box">
-            <h3>ඔයාගේ පිළිතුර</h3>
-            <p>{response}</p>
+      <div className="questions-list">
+        {questions.map((q) => (
+          <div key={q.id} className="question-card" onClick={() => handleShowAnswer(q.question)}>
+            <h4>{q.topic}</h4>
+            <p>{q.question}</p>
           </div>
-        )}
+        ))}
       </div>
 
+      {selectedAnswer && (
+        <div className="answer-modal">
+          <h3>Model Answer:</h3>
+          <p>{selectedAnswer}</p>
+          <button onClick={() => setSelectedAnswer(null)}>Close</button>
+        </div>
+      )}
     </div>
   );
 }

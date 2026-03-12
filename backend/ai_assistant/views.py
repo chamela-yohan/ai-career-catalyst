@@ -15,7 +15,7 @@ class GeminiTestView(APIView):
             return Response({"error": "Prompt is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            model = genai.GenerativeModel('gemini-pro')
+            model = genai.GenerativeModel('gemini-2.5-flash')
             response = model.generate_content(user_prompt)
             
             return Response({

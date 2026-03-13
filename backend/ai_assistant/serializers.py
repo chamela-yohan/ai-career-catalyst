@@ -6,7 +6,7 @@ class InterviewQuestionSerializer(serializers.ModelSerializer):
         model = InterviewQuestion
         fields = '__all__'
         
-class IinterviewSessionSerializer(serializers.ModelSerializer):
+class InterviewSessionSerializer(serializers.ModelSerializer):
     question_count = serializers.IntegerField(source='questions.count', read_only=True) # session එකට අදාල ප්‍රශ්න ගාන
     
     class Meta:

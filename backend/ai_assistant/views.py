@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import InterviewQuestion, InterviewSession
-from .serializers import InterviewQuestionSerializer, IinterviewSessionSerializer
+from .serializers import InterviewQuestionSerializer, InterviewSessionSerializer
 
 # Gemini Configure කිරීම
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
@@ -80,7 +80,12 @@ class InterviewGeneratorView(APIView):
 class InterviewHistoryView(APIView):
     def get(self, request):
         sessions = InterviewSession.objects.all().order_by('-created_at')
-        serializer = IinterviewSessionSerializer(sessions, many=True)
+        serializer = InterviewSessionSerializer(sessions, many=True)
+        
+        uid = request.headers.get('Authorization').split(' ')[1]
+        sessions = InterviewSession.objects.filter(firebase_uid=uid).order_by('-created_at')
+        serializer = InterviewSessionSerializer(sessions, many=True)
+        
         return Response(serializer.data)
     
 # අපිට ඕනි session එක ගන්න    

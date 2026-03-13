@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { generateQuestions, getModelAnswer } from './api';
+import { generateQuestions, getModelAnswer, getSessionDetail } from './api';
 import './App.css';
+
+import History from './History';
 
 function App() {
   const [role, setRole] = useState('');
@@ -8,10 +10,13 @@ function App() {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const [showHistory, setShowHistory] = useState(false);
+
   const handleGenerate = async () => {
     setLoading(true);
     const data = await generateQuestions(role, 'Intermediate');
     setQuestions(data);
+    setShowHistory(false);
     setLoading(false);
   };
 
@@ -21,9 +26,20 @@ function App() {
     setSelectedAnswer(answer);
   };
 
+  const handleSelectSession = async (sessionId) => {
+  setLoading(true);
+  const data = await getSessionDetail(sessionId);
+  setQuestions(data.map(q => ({
+      id: q.id,
+      question: q.question_text,
+      topic: q.topic
+  })));
+  setLoading(false);
+  };
+
   return (
     <div className="App">
-      <h1>AI Interview Coach 🤖</h1>
+      <h1>ඔයාගේ AI Interview Coach 🤖</h1>
       <input 
         value={role} 
         onChange={(e) => setRole(e.target.value)} 
@@ -32,6 +48,14 @@ function App() {
       <button onClick={handleGenerate} disabled={loading}>
         {loading ? "Generate වෙමින්..." : "ප්‍රශ්න ලබා ගන්න"}
       </button>
+
+      <button style={{ marginLeft: '10px' }} onClick={() => setShowHistory(!showHistory)}>
+        {showHistory ? "History Hide කරන්න" : "History බලන්න"}
+      </button>
+
+      {showHistory && (
+          <History onSelectSession={handleSelectSession} />
+      )}
 
       <div className="questions-list">
         {questions.map((q) => (

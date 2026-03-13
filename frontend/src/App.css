@@ -157,6 +157,7 @@ button:disabled {
 .question-card p {
   color: #c9d1d9;
   line-height: 1.5;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
 /* ANSWER MODAL */

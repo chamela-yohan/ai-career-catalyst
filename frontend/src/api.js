@@ -27,3 +27,15 @@ export const getModelAnswer = async (question) => {
     const response = await axios.post(`${API_URL}/test-ai/`, { prompt });
     return response.data.ai_response;
 };
+
+// all history ලබා ගැනීමට
+export const getHistory = async () => {
+    const response = await axios.get(`${API_URL}/history/`);
+    return response.data;
+};
+
+// අපිට ඕනි session එකක ප්‍රශ්න ලබා ගැනීමට
+export const getSessionDetail = async (sessionId) => {
+    const response = await axios.get(`${API_URL}/history/${sessionId}/`);
+    return response.data;
+};

@@ -1,0 +1,82 @@
+.history-section {
+  margin-top: 40px;
+  padding: 25px;
+
+  background: #0f1724;
+  border-radius: 14px;
+
+  border: 1px solid rgba(255,255,255,0.05);
+
+  text-align: left;
+}
+
+/* Title */
+
+.history-section h3 {
+  margin-bottom: 20px;
+  color: #7ee7ff;
+  font-size: 20px;
+}
+
+/* List */
+
+.history-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* History Card */
+
+.history-section li {
+  background: #121826;
+
+  padding: 15px 18px;
+  margin-bottom: 12px;
+
+  border-radius: 10px;
+
+  border: 1px solid rgba(255,255,255,0.05);
+
+  cursor: pointer;
+
+  transition: 0.25s;
+
+  position: relative;
+}
+
+/* Hover effect */
+
+.history-section li:hover {
+  transform: translateY(-3px);
+
+  border-color: #4cc9f0;
+
+  box-shadow:
+    0 8px 20px rgba(0,0,0,0.5),
+    0 0 10px rgba(76,201,240,0.3);
+}
+
+/* Job role */
+
+.history-section strong {
+  color: #e6edf3;
+  font-size: 15px;
+}
+
+/* Metadata */
+
+.history-section small {
+  display: block;
+  margin-top: 4px;
+
+  color: #7a8599;
+  font-size: 12px;
+}
+
+/* Empty state */
+
+.history-section p {
+  color: #7a8599;
+  font-style: italic;
+}

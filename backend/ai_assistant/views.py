@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import InterviewQuestion, InterviewSession
+from .serializers import InterviewQuestionSerializer, IinterviewSessionSerializer
 
 # Gemini Configure කිරීම
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
@@ -75,3 +76,19 @@ class InterviewGeneratorView(APIView):
             
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class InterviewHistoryView(APIView):
+    def get(self, request):
+        sessions = InterviewSession.objects.all().order_by('-created_at')
+        serializer = IinterviewSessionSerializer(sessions, many=True)
+        return Response(serializer.data)
+    
+# අපිට ඕනි session එක ගන්න    
+class SessionDetailView(APIView):
+    def get(self, request, session_id):
+        try:
+            questions = InterviewQuestion.objects.filter(session_id=session_id)
+            serializer = InterviewQuestionSerializer(questions, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)

@@ -4,6 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
+from .models import InterviewQuestion, InterviewSession
+
 # Gemini Configure කිරීම
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
@@ -51,10 +53,25 @@ class InterviewGeneratorView(APIView):
             
             raw_text = response.text.replace('```json', '').replace('```', '').strip()
             
+            questions_data = eval(raw_text)
+            
+            session = InterviewSession.objects.create(
+                job_role=job_role,
+                experience_level=experience
+            )
+            
+            for q in questions_data:
+                InterviewQuestion.objects.create(
+                    session=session,
+                    question_text=q['question'],
+                    topic=q['topic']
+                )
+            
             return Response({
                 "status": "success",
-                "questions": eval(raw_text) # සරලව string එක list එකක් බවට පත් කිරීම
-            }, status=status.HTTP_200_OK)
+                "session_id": session.id, # new session id
+                "questions": questions_data
+            }, status=status.HTTP_201_CREATED)
             
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

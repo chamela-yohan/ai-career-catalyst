@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class InterviewSession(models.Model):
-    firebase_uid = models.CharField(max_length=128, db_index=True, null=True, blank=True) # User ගේ ID එක
+    firebase_uid = models.CharField(max_length=255, db_index=True, null=True, blank=True) # User ගේ ID එක
     job_role = models.CharField(max_length=255)
     experience_level = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)

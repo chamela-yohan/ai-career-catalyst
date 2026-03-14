@@ -1,14 +1,27 @@
-import google.generativeai as genai
+from google import genai
 import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import get_object_or_404
+
+import json
 
 from .models import InterviewQuestion, InterviewSession
 from .serializers import InterviewQuestionSerializer, InterviewSessionSerializer
 
+import firebase_admin
+from firebase_admin import credentials, auth as firebase_auth
+
+
+
+if not firebase_admin._apps:
+    cred = credentials.Certificate('ai_assistant/app/serviceAccountKey.json')
+    firebase_admin.initialize_app(cred)
+
+
 # Gemini Configure කිරීම
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 class GeminiTestView(APIView):
     def post(self, request):
@@ -18,8 +31,11 @@ class GeminiTestView(APIView):
             return Response({"error": "Prompt is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            model = genai.GenerativeModel('gemini-2.5-flash')
-            response = model.generate_content(user_prompt)
+            #model = genai.GenerativeModel('gemini-2.5-flash')
+            response = client.models.generate_content(
+                        model='gemini-2.5-flash',
+                        contents=user_prompt
+                       )
             
             return Response({
                 "status": "success",
@@ -47,18 +63,34 @@ class InterviewGeneratorView(APIView):
         """
 
         try:
-            model = genai.GenerativeModel('gemini-2.5-flash')
-            response = model.generate_content(prompt)
+           # model = genai.GenerativeModel('gemini-2.5-flash')
+            response = client.models.generate_content(
+                        model='gemini-2.5-flash',
+                        contents=prompt
+                        )
             
             # AI එකෙන් එන JSON string එක clean කරිම
             
             raw_text = response.text.replace('```json', '').replace('```', '').strip()
             
-            questions_data = eval(raw_text)
+            questions_data = json.loads(raw_text)
+            
+            auth_header = request.headers.get("Authorization")
+            if not auth_header or not auth_header.startswith("Bearer "):
+                return Response({"error": "Unauthorized"}, status=401)
+            
+            token = auth_header.split(" ")[1]
+            
+            try:
+                decoded = firebase_auth.verify_id_token(token)
+                uid = decoded['uid']   
+            except Exception:
+                return Response({"error": "Invalid token"}, status=401)
             
             session = InterviewSession.objects.create(
                 job_role=job_role,
-                experience_level=experience
+                experience_level=experience,
+                firebase_uid=uid
             )
             
             for q in questions_data:
@@ -75,14 +107,32 @@ class InterviewGeneratorView(APIView):
             }, status=status.HTTP_201_CREATED)
             
         except Exception as e:
+            import traceback
+            traceback.print_exc() 
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 class InterviewHistoryView(APIView):
     def get(self, request):
         sessions = InterviewSession.objects.all().order_by('-created_at')
         serializer = InterviewSessionSerializer(sessions, many=True)
+            
+        auth_header = request.headers.get("Authorization")
+      
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header.split(" ")[1]
+            
+            try:
+                decoded = firebase_auth.verify_id_token(token)
+                uid = decoded['uid']   
+            except Exception:
+                return Response({"error": "Invalid token"}, status=401)
+            
+        else:
+            return Response(
+                {"error": "Authorization token missing or invalid"},
+                status=401
+            )   
         
-        uid = request.headers.get('Authorization').split(' ')[1]
         sessions = InterviewSession.objects.filter(firebase_uid=uid).order_by('-created_at')
         serializer = InterviewSessionSerializer(sessions, many=True)
         
@@ -92,8 +142,9 @@ class InterviewHistoryView(APIView):
 class SessionDetailView(APIView):
     def get(self, request, session_id):
         try:
-            questions = InterviewQuestion.objects.filter(session_id=session_id)
-            serializer = InterviewQuestionSerializer(questions, many=True)
-            return Response(serializer.data)
+           get_object_or_404(InterviewSession, id=session_id)
+           questions = InterviewQuestion.objects.filter(session_id=session_id)
+           serializer = InterviewQuestionSerializer(questions, many=True)
+           return Response(serializer.data)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)

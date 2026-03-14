@@ -26,9 +26,9 @@ function Auth({ onUserChange }) {
     <div className="auth-container">
       {user ? (
         <div className="user-profile">
-          <img src={user.photoURL} alt="profile" />
-          <span>{user.displayName}</span>
-          <button onClick={handleLogout}>Logout</button>
+          <img style={{borderRadius:'10px', marginRight: '10px'}} src={user.photoURL} alt="profile" />
+          <h2>{user.displayName}</h2>
+          <button style={{marginRight: '10px'}} onClick={handleLogout}>Logout</button>
         </div>
       ) : (
         <button onClick={handleGoogleLogin}>Login with Google</button>

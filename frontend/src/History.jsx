@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getHistory } from './api';
 import './History.css';
 
-function History({ onSelectSession }) {
+function History({ onSelectSession, user }) {
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
@@ -10,7 +10,7 @@ function History({ onSelectSession }) {
   }, []);
 
   const fetchHistory = async () => {
-    const data = await getHistory();
+    const data = await getHistory(user);
     setHistory(data);
   };
 

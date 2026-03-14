@@ -15,11 +15,11 @@ export const askAI = async (prompt) => {
 // ප්‍රශ්න ගන්න
 export const generateQuestions = async (jobRole, experience, user) => {
     const headers = await getAuthHeaders(user);
-    const response = await axios.post(`${API_URL}/generate-questions/`, { 
-        job_role: jobRole, 
-        experience: experience,
-        headers 
-    });
+    const response = await axios.post(
+                     `${API_URL}/generate-questions/`,
+                      { job_role: jobRole, experience: experience },  // body
+                       headers                                          // axios config (headers)
+                    );
     return response.data;
 };
 

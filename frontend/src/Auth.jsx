@@ -2,6 +2,8 @@ import { auth, googleProvider } from "./firebase";
 import { signInWithPopup, signOut } from "firebase/auth";
 import { useState, useEffect } from "react";
 
+import './App.css';
+
 function Auth({ onUserChange }) {
   const [user, setUser] = useState(null);
 
@@ -26,9 +28,16 @@ function Auth({ onUserChange }) {
     <div className="auth-container">
       {user ? (
         <div className="user-profile">
-          <img style={{borderRadius:'10px', marginRight: '10px'}} src={user.photoURL} alt="profile" />
+          <img 
+            src={user.photoURL} 
+            alt="profile"
+            onError={(e) => { e.target.style.display = 'none'; }}
+            style={{borderRadius: '10px'}}
+            referrerPolicy="no-referrer" 
+            className="profile-img"
+          />
           <h2>{user.displayName}</h2>
-          <button style={{marginRight: '10px'}} onClick={handleLogout}>Logout</button>
+          <button onClick={handleLogout}>Logout</button>
         </div>
       ) : (
         <button onClick={handleGoogleLogin}>Login with Google</button>
@@ -36,5 +45,7 @@ function Auth({ onUserChange }) {
     </div>
   );
 }
+
+
 
 export default Auth;

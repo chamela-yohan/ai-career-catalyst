@@ -94,6 +94,34 @@ input:focus {
   box-shadow: 0 0 8px rgba(76, 201, 240, 0.4);
 }
 
+textarea{
+  width: 90%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  background: #0f1724;
+  color: #e6edf3;
+
+  font-size: 15px;
+  margin-right: 10px;
+  min-height: 100px;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #4cc9f0;
+  box-shadow: 0 0 8px rgba(76, 201, 240, 0.4);
+}
+
+textarea ::-webkit-scrollbar-track {
+  background: #0f1724; 
+}
+
+textarea ::-scrollbar-thumb{
+  background: #1b2236; 
+}
+
 /* BUTTON */
 
 button {
@@ -157,7 +185,11 @@ button:disabled {
 .question-card p {
   color: #c9d1d9;
   line-height: 1.5;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+ 
+}
+
+.question-card button{
+  width: 100%;
 }
 
 /* ANSWER MODAL */
@@ -247,13 +279,14 @@ button:disabled {
 
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 3px 2px rgba(99, 179, 237, 0.3); }
-  50%       { box-shadow: 0 0 3px 6px rgba(99, 179, 237, 0.2); }
+  0%, 100% { box-shadow: 0 0 3px 2px rgba(99, 179, 237, 0.098); }
+  50%       { box-shadow: 0 0 3px 6px rgba(99, 179, 237, 0.095); }
 }
 
 .profile-img {
   border-radius: 50%;
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   animation: pulse-glow 2s ease-in-out infinite;
 }
+

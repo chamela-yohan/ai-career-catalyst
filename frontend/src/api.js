@@ -52,3 +52,14 @@ const getAuthHeaders = async (user) => {
         headers: { Authorization: `Bearer ${token}` }
     };
 };
+
+
+export const evaluateAnswer = async (question, userAnswer, jobRole, user) => {
+    const headers = await getAuthHeaders(user);
+    const response = await axios.post(
+        `${API_URL}/evaluate-answer/`,
+        { question, answer: userAnswer, job_role: jobRole },
+        headers
+    );
+    return response.data;
+};

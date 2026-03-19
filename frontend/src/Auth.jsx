@@ -32,7 +32,6 @@ function Auth({ onUserChange }) {
             src={user.photoURL} 
             alt="profile"
             onError={(e) => { e.target.style.display = 'none'; }}
-            style={{borderRadius: '10px'}}
             referrerPolicy="no-referrer" 
             className="profile-img"
           />

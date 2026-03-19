@@ -148,3 +148,40 @@ class SessionDetailView(APIView):
            return Response(serializer.data)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+        
+        
+class AnswerEvaluationView(APIView):
+    def post(self,request):
+        question_text = request.data.get('question', '')
+        user_answer = request.data.get('answer', '')
+        job_role = request.data.get('job_role', 'Software Engineer')
+        
+        # AI prompt එක
+        prompt = f"""
+        You are an expert technical interviewer for the role of {job_role}.
+        Evaluate the following user answer for the given question.
+        
+        Question: {question_text}
+        User Answer: {user_answer}
+        
+        Please provide the response strictly in the following JSON format:
+        {{
+            "score": "A score out of 10 (e.g., 8/10)",
+            "feedback": "A brief paragraph about what was good and what was missing",
+            "improvement_tips": ["tip 1", "tip 2", "tip 3"],
+            "model_answer_snippet": "A short version of how a perfect answer should look"
+        }}
+        """
+        
+        try:
+            response = client.models.generate_content(
+                        model='gemini-2.5-flash',
+                        contents=prompt
+                        )
+            raw_text = response.text.replace('```json', '').replace('```', '').strip()
+            
+            evaluation_data = json.loads(raw_text)
+            
+            return Response(evaluation_data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
